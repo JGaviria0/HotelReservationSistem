@@ -13,12 +13,16 @@ CREATE TABLE user (
 );
 
 CREATE TABLE hotel(
-    hotelID int NOT NULL AUTO_INCREMENT,
+    hotelID int NOT NULL,
     name varchar(255) NOT NULL,
     email varchar(255) NOT NULL,
     phone varchar(255) NOT NULL,
     number_of_rooms int NOT NULL,
     capacity int NOT NULL,
+    no_single int NOT NULL,
+    no_double int NOT NULL,
+    no_triple int NOT NULL,
+    no_quad int NOT NULL,
     PRIMARY KEY(hotelID)
 );
 
