@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class HotelModel {
     
     @Id
-    private Long hotelID; 
+    private Long hotel_id; 
     @Column
     private String name; 
     @Column

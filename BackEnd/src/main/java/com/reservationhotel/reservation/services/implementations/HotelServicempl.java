@@ -18,7 +18,7 @@ public class HotelServicempl implements HotelService {
     public HotelModel mappingDTOToModel(HotelDTO hotel){
 
         HotelModel hotelModel = HotelModel.builder()
-            .hotelID(hotel.getHotelID() != null ? hotel.getHotelID() : null)
+            .hotel_id(hotel.getHotel_id() != null ? hotel.getHotel_id() : null)
             .name(hotel.getName())
             .email(hotel.getEmail())
             .phone(hotel.getPhone())
@@ -35,8 +35,8 @@ public class HotelServicempl implements HotelService {
 
     public HotelDTO mappingModelToDTO(HotelModel hotel){
 
-        HotelDTO hotelModel = HotelDTO.builder()
-            .hotelID(hotel.getHotelID() != null ? hotel.getHotelID() : null)
+        HotelDTO hotelDTO = HotelDTO.builder()
+            .hotel_id(hotel.getHotel_id() != null ? hotel.getHotel_id() : null)
             .name(hotel.getName())
             .email(hotel.getEmail())
             .phone(hotel.getPhone())
@@ -48,7 +48,7 @@ public class HotelServicempl implements HotelService {
             .capacity(hotel.getCapacity())
             .build();
 
-        return hotelModel; 
+        return hotelDTO; 
     }
     
     @Override

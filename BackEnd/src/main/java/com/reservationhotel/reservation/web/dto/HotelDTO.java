@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HotelDTO {
     
-    private Long hotelID; 
+    private Long hotel_id; 
     private String name; 
     private String email;
     private String phone;
