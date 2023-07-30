@@ -13,8 +13,8 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmit(): void {
-    if (this.authService.login(this.username, this.password)) {
+  async onSubmit(): Promise<void> {
+    if (await this.authService.login(this.username, this.password)) {
       console.log("logeado mi fai")
       this.router.navigate(['/']); // Cambia 'dashboard' por la ruta a la página tras el login exitoso
     } else {

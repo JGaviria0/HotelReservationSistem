@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserDTO } from 'src/app/models/user.model';
+import { UserModel } from 'src/app/models/user.model';
+import { UserDTO } from 'src/app/models/userDTO.model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,24 +9,28 @@ import { UserDTO } from 'src/app/models/user.model';
 export class AuthService {
 
   private loggedIn = false;
-  private URL = 'http://localhost:4000/user';
+  private URL = 'http://localhost:4100/user';
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): boolean {
-
-    const user = this.http.get(`${this.URL}/${username}`).subscribe((res) => {
-      console.log(res);
-
-    });
-    // const correctPassword: string = user ? user.password : "";
+  async login(username: string, password: string): Promise<boolean> {
     
-    // if (password === correctPassword) {
-    //   this.loggedIn = true;
-    //   localStorage.setItem('user', username);
-    //   return true;
-    // }
-    return false;
+    const user = await this.http.get<UserDTO>(`${this.URL}/${username}`).toPromise();
+    const correctPassword = user? user.password: "";
+
+    if (password === correctPassword) {
+      this.loggedIn = true;
+      localStorage.setItem('user', username);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  register(data: UserModel){
+    this.http.post<any>(`${this.URL}`, data).subscribe( (res) => {
+      console.log("succesfully", res);
+    })
   }
 
   isLoggedIn(): boolean {
