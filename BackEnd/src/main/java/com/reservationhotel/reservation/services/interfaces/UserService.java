@@ -13,5 +13,5 @@ public interface UserService {
 
     public UserDTO updateUserById (UserDTO request, Long id);
 
-    public Boolean deleteUser(Long id);
+    public String deleteUser(Long id);
 }

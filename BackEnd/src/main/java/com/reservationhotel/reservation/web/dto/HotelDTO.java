@@ -20,6 +20,9 @@ public class HotelDTO {
     private int noDouble; 
     private int noTriple;
     private int noQuad; 
-    private int capacity; 
+    private int capacity;
+    private String imagen;
+    private String location;
+    private Long owner_id; 
 
 }

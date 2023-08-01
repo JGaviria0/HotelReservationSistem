@@ -10,15 +10,26 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   username: string = '';
   password: string = '';
+  errorMessage: string | undefined ;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   async onSubmit(): Promise<void> {
-    if (await this.authService.login(this.username, this.password)) {
-      console.log("logeado mi fai")
-      this.router.navigate(['/']); // Cambia 'dashboard' por la ruta a la página tras el login exitoso
-    } else {
-      alert('Credenciales incorrectas. Inténtalo de nuevo.');
+    try{
+      if (await this.authService.login(this.username, this.password)) {
+        let user = localStorage.getItem('user');
+        let jsonuser = JSON.parse(user? user: "{}")
+        if(jsonuser.userType == "owner"){
+          this.router.navigate(['/myhotels']); 
+        }
+        else{
+          this.router.navigate(['/']); 
+        }
+      } else {
+        this.errorMessage = "Credenciales incorrectas. Inténtalo de nuevo.";
+      }
+    } catch(e: any) {
+      this.errorMessage = e.error.message;
     }
   }
 }

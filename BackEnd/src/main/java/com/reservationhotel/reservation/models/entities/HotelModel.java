@@ -37,4 +37,10 @@ public class HotelModel {
     private int noQuad;  
     @Column
     private int capacity;
+    @Column
+    private String imagen;
+    @Column
+    private String location;
+    @Column
+    private Long owner_id;
 }

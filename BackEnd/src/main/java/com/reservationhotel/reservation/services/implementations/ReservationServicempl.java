@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.reservationhotel.reservation.models.entities.ReservationID;
@@ -11,6 +12,7 @@ import com.reservationhotel.reservation.models.entities.ReservationModel;
 import com.reservationhotel.reservation.repositories.ReservationRepository;
 import com.reservationhotel.reservation.services.interfaces.ReservationService;
 import com.reservationhotel.reservation.web.dto.ReservationDTO;
+import com.reservationhotel.reservation.web.exceptions.CustomBadRequestException;
 
 @Service
 public class ReservationServicempl implements ReservationService {
@@ -55,22 +57,73 @@ public class ReservationServicempl implements ReservationService {
     }
 
     @Override
-    public ReservationDTO saveReservation(ReservationDTO reservation) {
-        // if(reservation.getName().isEmpty()) {
-        // throw new BadRequestException("The reservation have to have FirstName.");
-        // }
+    public ReservationDTO saveReservation(ReservationDTO reservation){
 
-        ReservationModel reservationModel = this.mappingDTOToModel(reservation);
-        ReservationDTO reservationDTO = this.mappingModelToDTO(reservationRepository.save(reservationModel));
-
-        return reservationDTO;
+        try {
+            reservationRepository.findByCoID(reservation.getHotel_id(), reservation.getUser_id());
+        } catch(Exception e){
+            ReservationModel reservationModel = this.mappingDTOToModel(reservation);
+            try{
+                ReservationDTO reservationDTO = this.mappingModelToDTO(reservationRepository.save(reservationModel));
+                return reservationDTO;
+            } catch(Exception err){
+                throw new CustomBadRequestException("Error al crear la reserva, Intente Luego", HttpStatus.BAD_REQUEST.value());
+            }
+        }
+        System.out.println("ya existe");
+        throw new CustomBadRequestException("Ya existe la reserva", HttpStatus.NOT_ACCEPTABLE.value());
     }
 
     @Override
     public ReservationDTO getReservationById(ReservationID id) {
-        Optional<ReservationModel> query = reservationRepository.findByCoID(id.getHotel_id(), id.getUser_id());
-        ReservationDTO returnquery = this.mappingModelToDTO(query.get());
+        try{
+            Optional<ReservationModel> query = reservationRepository.findByCoID(id.getHotel_id(), id.getUser_id());
+            ReservationDTO returnquery = this.mappingModelToDTO(query.get());
         return returnquery;
+        } catch (Exception e){
+            throw new CustomBadRequestException("Reserva con id usrio: " + id + " No existe.", HttpStatus.BAD_REQUEST.value());
+        }
+    }
+
+    @Override
+    public ArrayList<ReservationDTO> getReservationByHotel(Long id) {
+        try{
+            ArrayList<ReservationModel> query;
+            try{
+                query =  (ArrayList<ReservationModel>)reservationRepository.findByHotel(id);
+            } catch (Exception e){
+                throw new CustomBadRequestException("Reserva con id usrio: " + id + " No existe.", HttpStatus.BAD_REQUEST.value());
+            }
+            ArrayList<ReservationDTO> finalReservations = new ArrayList<ReservationDTO>();
+            for (int i = 0; i < query.size(); i++) {
+                finalReservations.add(this.mappingModelToDTO(query.get(i)));
+            }
+            return finalReservations;
+        } catch(Exception err) {
+            System.out.println(err);
+            throw new CustomBadRequestException("No se pudo consultar, intente luego.", HttpStatus.BAD_REQUEST.value());
+        }
+    }
+
+    @Override
+    public ArrayList<ReservationDTO> getReservationByUser(Long id) {
+        try{
+            ArrayList<ReservationModel> query;
+            try{
+                query =  (ArrayList<ReservationModel>)reservationRepository.findByUser(id);
+            } catch (Exception e){
+                throw new CustomBadRequestException("Reserva con id usrio: " + id + " No existe.", HttpStatus.BAD_REQUEST.value());
+            }
+            ArrayList<ReservationDTO> finalReservations = new ArrayList<ReservationDTO>();
+            for (int i = 0; i < query.size(); i++) {
+                finalReservations.add(this.mappingModelToDTO(query.get(i)));
+            }
+            return finalReservations;
+        } catch(Exception err) {
+            System.out.println(err);
+            throw new CustomBadRequestException("No se pudo consultar, intente luego.", HttpStatus.BAD_REQUEST.value());
+        }
+        
     }
 
     @Override

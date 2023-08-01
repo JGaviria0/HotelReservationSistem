@@ -14,13 +14,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   async login(username: string, password: string): Promise<boolean> {
-    
     const user = await this.http.get<UserDTO>(`${this.URL}/${username}`).toPromise();
     const correctPassword = user? user.password: "";
-
     if (password === correctPassword) {
       this.loggedIn = true;
-      localStorage.setItem('user', username);
+      localStorage.setItem('user', JSON.stringify(user));
       return true;
     } else {
       return false;
@@ -28,9 +26,7 @@ export class AuthService {
   }
 
   register(data: UserModel){
-    this.http.post<any>(`${this.URL}`, data).subscribe( (res) => {
-      console.log("succesfully", res);
-    })
+    return this.http.post<any>(`${this.URL}`, data);
   }
 
   isLoggedIn(): boolean {
@@ -39,5 +35,9 @@ export class AuthService {
 
   logout(): void {
     this.loggedIn = false;
+  }
+
+  getUserByID(username: string){
+    return this.http.get<UserDTO>(`${this.URL}/${username}`)
   }
 }

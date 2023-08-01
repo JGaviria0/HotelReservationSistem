@@ -2,6 +2,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "types": ["jquery"],
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -23,6 +24,7 @@
       "ES2022",
       "dom"
     ]
+    
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

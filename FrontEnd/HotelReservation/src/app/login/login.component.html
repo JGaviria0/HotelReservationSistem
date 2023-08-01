@@ -1,8 +1,8 @@
 <app-navbar></app-navbar>
-<div class="container mt-5">
-  <div class="login-container">
-    <h2 class="mb-4">Login</h2>
-  <form (ngSubmit)="onSubmit()">
+<div class="container-fluid bg-dark vh-100 d-flex align-items-center justify-content-center">
+  <div class="login-container text-white text-center">
+    <h2 class="mb-4">Sign in</h2>
+  <form (ngSubmit)="onSubmit()" class="text-center">
     <div class="form-group">
       <label for="username" class="text-white">Username</label>
       <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username" required>
@@ -11,6 +11,11 @@
       <label for="password" class="text-white">Password</label>
       <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password" required>
     </div>
-    <button type="submit" class="btn btn-primary btn-block btn-transparent">Login</button>
+    <button type="submit" class="btn btn-primary btn-block btn-transparent text-center">Login</button>
+    <div *ngIf="errorMessage" class="text-danger mt-3">
+      {{ errorMessage }}
+    </div>
   </form>
-</div>
+  </div>
+  </div>
+

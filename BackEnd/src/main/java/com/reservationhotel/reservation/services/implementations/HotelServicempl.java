@@ -1,11 +1,12 @@
 package com.reservationhotel.reservation.services.implementations;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.reservationhotel.reservation.web.dto.HotelDTO;
+import com.reservationhotel.reservation.web.exceptions.CustomBadRequestException;
 import com.reservationhotel.reservation.models.entities.HotelModel;
 import com.reservationhotel.reservation.services.interfaces.HotelService;
 import com.reservationhotel.reservation.repositories.HotelRepository;
@@ -28,6 +29,9 @@ public class HotelServicempl implements HotelService {
             .noTriple(hotel.getNoTriple())
             .noQuad(hotel.getNoQuad())
             .capacity(hotel.getCapacity())
+            .location(hotel.getLocation())
+            .imagen(hotel.getImagen())
+            .owner_id(hotel.getOwner_id())
             .build();
 
         return hotelModel; 
@@ -46,6 +50,9 @@ public class HotelServicempl implements HotelService {
             .noTriple(hotel.getNoTriple())
             .noQuad(hotel.getNoQuad())
             .capacity(hotel.getCapacity())
+            .location(hotel.getLocation())
+            .imagen(hotel.getImagen())
+            .owner_id(hotel.getOwner_id())
             .build();
 
         return hotelDTO; 
@@ -53,43 +60,71 @@ public class HotelServicempl implements HotelService {
     
     @Override
     public ArrayList<HotelDTO> getHotel(){
-
-        ArrayList<HotelModel> users = (ArrayList<HotelModel>) hotelRepository.findAll(); 
-        ArrayList<HotelDTO> finalUsers = new ArrayList<HotelDTO>(); 
-        for(int i=0; i<users.size(); i++){
-            finalUsers.add(this.mappingModelToDTO(users.get(i)));
+        try{
+            ArrayList<HotelModel> users = (ArrayList<HotelModel>) hotelRepository.findAll(); 
+            ArrayList<HotelDTO> finalUsers = new ArrayList<HotelDTO>(); 
+            for(int i=0; i<users.size(); i++){
+                finalUsers.add(this.mappingModelToDTO(users.get(i)));
+            }
+            return finalUsers; 
+        } catch(Exception e){
+            throw new CustomBadRequestException("Error, intentelo mas tarde.", HttpStatus.NOT_FOUND.value());
         }
-        return finalUsers; 
     }
 
 
     @Override
     public HotelDTO saveHotel(HotelDTO hotel){
-        // if(user.getName().isEmpty()) {
-        //     throw new BadRequestException("The user have to have FirstName.");
-        // }
-
-        int hotelcapacity = hotel.getNoSingle() + hotel.getNoDouble()*2 + hotel.getNoTriple()*3 + hotel.getNoQuad()*4;
-        hotel.setCapacity(hotelcapacity);
-        int hotelrooms = hotel.getNoSingle() + hotel.getNoDouble() + hotel.getNoTriple() + hotel.getNoQuad();
-        hotel.setNoRooms(hotelrooms);
-
-        HotelModel hotelModel = this.mappingDTOToModel(hotel);
-        HotelDTO hotelDTO = this.mappingModelToDTO(hotelRepository.save(hotelModel));
-
-        return hotelDTO; 
+        try {
+            hotelRepository.findById(hotel.getHotel_id());
+        } catch(Exception e){
+            int hotelcapacity = hotel.getNoSingle() + hotel.getNoDouble()*2 + hotel.getNoTriple()*3 + hotel.getNoQuad()*4;
+            hotel.setCapacity(hotelcapacity);
+            int hotelrooms = hotel.getNoSingle() + hotel.getNoDouble() + hotel.getNoTriple() + hotel.getNoQuad();
+            hotel.setNoRooms(hotelrooms);
+            
+            HotelModel hotelModel = this.mappingDTOToModel(hotel);
+            try{
+                HotelDTO hotelDTO = this.mappingModelToDTO(hotelRepository.save(hotelModel));
+                return hotelDTO; 
+            } catch(Exception ee){
+                throw new CustomBadRequestException("Error al guardar el nuevo Hotel, Intente Luego", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            }
+        }
+        throw new CustomBadRequestException("El Hotel ya existe.", HttpStatus.NOT_ACCEPTABLE.value());
     }
 
     @Override
     public HotelDTO getHotelById(Long id){
-        Optional<HotelModel> query =  hotelRepository.findById(id);
-        HotelDTO returnquery = this.mappingModelToDTO(query.get());
+        if (id <= 0) {
+            throw new CustomBadRequestException("El Id debe ser mayor a 0.", HttpStatus.BAD_REQUEST.value());
+        }
+       HotelModel query =  hotelRepository.findById(id)
+            .orElseThrow(() -> new CustomBadRequestException("Hotel con ID: " + id + " No existe.", HttpStatus.BAD_REQUEST.value()));
+        HotelDTO returnquery = this.mappingModelToDTO(query);
         return returnquery; 
     }
 
     @Override
+    public ArrayList<HotelDTO> getHotelByOwner(Long id){
+        
+        ArrayList<HotelModel> query =  hotelRepository.findByOwner(id);
+        if(query.isEmpty()){
+            throw new CustomBadRequestException("El usuario" + id + "No tiene hoteles o no existe." , HttpStatus.NOT_FOUND.value());
+        }
+        ArrayList<HotelDTO> finalUsers = new ArrayList<HotelDTO>(); 
+        for(int i=0; i<query.size(); i++){
+            finalUsers.add(this.mappingModelToDTO(query.get(i)));
+        }
+        return finalUsers; 
+    }
+
+    @Override
     public HotelDTO updateHotelById (HotelDTO request, Long id){
-        HotelModel hotel = hotelRepository.findById(id).get();
+        
+        
+        HotelModel hotel = hotelRepository.findById(id)
+            .orElseThrow(() -> new CustomBadRequestException("Error al editar hotel con id: " + id + " NO existe", HttpStatus.NOT_FOUND.value()));
         System.out.println(request);
         System.out.println(hotel);
         hotel.setName(request.getName());
@@ -110,12 +145,14 @@ public class HotelServicempl implements HotelService {
     }
 
     @Override
-    public Boolean deleteHotel(Long id){
+    public String deleteHotel(Long id){
+        hotelRepository.findById(id)
+            .orElseThrow(() -> new CustomBadRequestException("Error al eliminar Hotel con id: " + id + " NO existe", HttpStatus.NOT_FOUND.value()));
         try{
             hotelRepository.deleteById(id);
-            return true; 
+            return "Eliminado correctamente";
         }catch(Exception e){
-            return false; 
+            throw new CustomBadRequestException("Error al eliminar hotel con id: " + id , HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
     }
 }

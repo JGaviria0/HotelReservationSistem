@@ -1,5 +1,6 @@
 package com.reservationhotel.reservation.repositories;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,10 @@ public interface ReservationRepository extends JpaRepository<ReservationModel, L
     
     @Query(value = "SELECT * FROM reservation WHERE hotel_id = ?1 AND user_id = ?2", nativeQuery = true)
     Optional<ReservationModel> findByCoID(Long hotel_id, Long user_id);
+
+    @Query(value = "SELECT * FROM reservation WHERE hotel_id = ?1", nativeQuery = true)
+    ArrayList<ReservationModel> findByHotel(Long hotel_id);
+
+    @Query(value = "SELECT * FROM reservation WHERE user_id = ?1", nativeQuery = true)
+    ArrayList<ReservationModel> findByUser(Long user_id);
 }

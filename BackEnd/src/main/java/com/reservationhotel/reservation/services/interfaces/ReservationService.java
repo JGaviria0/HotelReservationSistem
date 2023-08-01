@@ -14,5 +14,9 @@ public interface ReservationService {
 
     public ReservationDTO updateReservationById (ReservationDTO request, Long id);
 
+    public ArrayList<ReservationDTO> getReservationByHotel(Long id);
+    
+    public ArrayList<ReservationDTO> getReservationByUser(Long id);
+
     public Boolean deleteReservation(Long id);
 }

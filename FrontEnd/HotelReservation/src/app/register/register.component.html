@@ -1,13 +1,20 @@
 <app-navbar></app-navbar>
-<div class="container mt-5">
-    <h2>Register</h2>
+<div class="container-fluid bg-dark vh-100 d-flex align-items-center justify-content-center">
+  <div class="login-container text-white text-center">
+    <h2 class="mb-4">Register</h2>
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="document">Documento</label>
-        <input type="text" class="form-control" id="document" name="document" [(ngModel)]="user.document"  required>
+        <label for="document" class="text-white">Documento</label>
+        <div *ngIf="formSubmitted && user.document == 0" class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="text" class="form-control" id="document" name="document" [(ngModel)]="user.document"  required="">
       </div>
       <div class="form-group">
-        <label for="documentType">Tipo de documento</label>
+        <label for="documentType" class="text-white">Tipo de documento</label>
+        <div *ngIf="formSubmitted && user.documentType == ''" class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
         <select class="form-control" id="documentType" name="documentType" [(ngModel)]="user.documentType" required>
           <option value="ID">Cedula</option>
           <option value="Passport">Tarjeta de identidad</option>
@@ -15,25 +22,37 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name" class="text-white">Name</label>
+        <div *ngIf="formSubmitted && user.name == ''" class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
         <input type="text" class="form-control" id="name" name="name" [(ngModel)]="user.name" required>
       </div>
       <div class="form-group">
-        <label for="userType">User Type</label>
+        <label for="userType" class="text-white">User Type</label>
+        <div *ngIf="formSubmitted && user.userType == ''" class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
         <select class="form-control" id="userType" name="userType" [(ngModel)]="user.userType" required>
           <option value="client">Cliente</option>
           <option value="owner">Propietario</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="phone">Phone</label>
+        <label for="phone" class="text-white">Phone</label>
+        <div *ngIf="formSubmitted && user.phone == ''" class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
         <input type="text" class="form-control" id="name" name="phone" [(ngModel)]="user.phone" required>
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password" class="text-white">Password</label>
+        <div *ngIf="formSubmitted && user.password == ''" class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
         <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password" required>
       </div>
-      <button type="submit" class="btn btn-primary">Register</button>
+      <button type="submit" class="btn btn-primary btn-block btn-transparent text-center mt-3">Register</button>
     </form>
   </div>
-  
+  </div>

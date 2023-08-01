@@ -1,0 +1,77 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+    <h2>Edit Hotel</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="hotel_id">Hotel ID</label>
+        <div *ngIf="formSubmitted && !hotel.document" class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="text" class="form-control" id="hotel_id" name="hotel_id" [(ngModel)]="hotel.hotel_id" readonly>
+      </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <div *ngIf="formSubmitted && hotel.name == '' " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="hotel.name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div *ngIf="formSubmitted && hotel.email== '' " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="email" class="form-control" id="email" name="email" [(ngModel)]="hotel.email" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <div *ngIf="formSubmitted && hotel.phone== '' " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="hotel.phone" required>
+      </div>
+      <div class="form-group">
+        <label for="noSingle">No. of Single Rooms</label>
+        <div *ngIf="formSubmitted && !hotel.noSingle " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="number" class="form-control" id="noSingle" name="noSingle" [(ngModel)]="hotel.noSingle" required>
+      </div>
+      <div class="form-group">
+        <label for="noDouble">No. of Double Rooms</label>
+        <div *ngIf="formSubmitted && !hotel.noDouble " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="number" class="form-control" id="noDouble" name="noDouble" [(ngModel)]="hotel.noDouble" required>
+      </div>
+      <div class="form-group">
+        <label for="noTriple">No. of Triple Rooms</label>
+        <div *ngIf="formSubmitted && !hotel.noTriple " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="number" class="form-control" id="noTriple" name="noTriple" [(ngModel)]="hotel.noTriple" required>
+      </div>
+      <div class="form-group">
+        <label for="noQuad">No. of Quad Rooms</label>
+        <div *ngIf="formSubmitted && !hotel.noQuad " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="number" class="form-control" id="noQuad" name="noQuad" [(ngModel)]="hotel.noQuad" required>
+      </div>
+      <div class="form-group">
+        <label for="location">Location</label>
+        <div *ngIf="formSubmitted && hotel.location== '' " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="text" class="form-control" id="location" name="location" [(ngModel)]="hotel.location" required>
+      </div>
+      <div class="form-group">
+        <label for="imagen">Image URL</label>
+        <div *ngIf="formSubmitted && !hotel.imagen " class="text-danger mt-3">
+          Campo Obligatorio
+        </div>
+        <input type="text" class="form-control" id="imagen" name="imagen" [(ngModel)]="hotel.imagen" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Create Hotel</button>
+    </form>
+  </div>

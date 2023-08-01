@@ -9,20 +9,30 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent {
 
-  name: string = ""; 
-
   constructor(
     private authService: AuthService, 
     private router: Router
 
-    ) {}
+  ) {}
   
   logged: boolean = this.checkLogged();
+  owner: boolean = this.checkOwner();
 
   checkLogged(): boolean{
 
     let name = localStorage.getItem("user");
     if(name) return true;
+    return false; 
+  }
+
+  checkOwner(): boolean{
+    let res = localStorage.getItem("user");
+    let user = res? res : "{}";
+
+    let userjson = JSON.parse(user);
+    console.log(userjson);
+    
+    if(userjson.userType == "owner") return true;
     return false; 
   }
 

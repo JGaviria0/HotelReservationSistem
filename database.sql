@@ -23,6 +23,10 @@ CREATE TABLE hotel(
     no_double int NOT NULL,
     no_triple int NOT NULL,
     no_quad int NOT NULL,
+    imagen varchar(255) NOT NULL,
+    location varchar(255) NOT NULL, 
+    owner_id bigint NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES user(document),
     PRIMARY KEY(hotel_id)
 );
 
