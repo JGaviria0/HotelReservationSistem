@@ -59,19 +59,18 @@ public class ReservationServicempl implements ReservationService {
     @Override
     public ReservationDTO saveReservation(ReservationDTO reservation){
 
-        try {
-            reservationRepository.findByCoID(reservation.getHotel_id(), reservation.getUser_id());
-        } catch(Exception e){
-            ReservationModel reservationModel = this.mappingDTOToModel(reservation);
-            try{
-                ReservationDTO reservationDTO = this.mappingModelToDTO(reservationRepository.save(reservationModel));
-                return reservationDTO;
-            } catch(Exception err){
-                throw new CustomBadRequestException("Error al crear la reserva, Intente Luego", HttpStatus.BAD_REQUEST.value());
-            }
+        if(!reservationRepository.findByCoID(reservation.getHotel_id(), reservation.getUser_id()).isEmpty()){
+            System.out.println("ya existe");
+            throw new CustomBadRequestException("Ya existe la reserva", HttpStatus.NOT_ACCEPTABLE.value());
         }
-        System.out.println("ya existe");
-        throw new CustomBadRequestException("Ya existe la reserva", HttpStatus.NOT_ACCEPTABLE.value());
+
+        ReservationModel reservationModel = this.mappingDTOToModel(reservation);
+        try{
+            ReservationDTO reservationDTO = this.mappingModelToDTO(reservationRepository.save(reservationModel));
+            return reservationDTO;
+        } catch(Exception err){
+            throw new CustomBadRequestException("Error al crear la reserva, Intente Luego", HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     @Override
@@ -127,9 +126,9 @@ public class ReservationServicempl implements ReservationService {
     }
 
     @Override
-    public ReservationDTO updateReservationById (ReservationDTO request, Long id){
-        ReservationModel reservation = reservationRepository.findById(id).get();
-        reservation.setId( new ReservationID(request.getHotel_id(), request.getUser_id()));
+    public ReservationDTO updateReservationById (ReservationDTO request, ReservationID id){
+        ReservationModel reservation = reservationRepository.findByCoID(id.getHotel_id(), id.getUser_id())
+            .orElseThrow(() -> new CustomBadRequestException("Error al editar la reserva con id: " + id + " NO existe", HttpStatus.NOT_FOUND.value()));
         reservation.setInit_date(request.getInit_date());
         reservation.setEnd_date(request.getEnd_date());
         reservation.setStatus(request.getStatus());
@@ -139,13 +138,15 @@ public class ReservationServicempl implements ReservationService {
     }
 
     @Override
-    public Boolean deleteReservation(Long id) {
-        try {
-            reservationRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            return false;
+    public String deleteReservation(ReservationID id) {
+        reservationRepository.findByCoID(id.getHotel_id(), id.getUser_id())
+            .orElseThrow(() -> new CustomBadRequestException("Error al eliminar user con id: " + id + " NO existe", HttpStatus.NOT_FOUND.value()));
+        try{
+            reservationRepository.deleteByCoId(id.getHotel_id(), id.getUser_id());
+            return "Eliminado correctamente";
+        }catch(Exception e){
+            System.out.println(e);
+            throw new CustomBadRequestException("Error al eliminar reservation con id: " + id.getHotel_id() + id.getUser_id() , HttpStatus.BAD_REQUEST.value());
         }
     }
-
 }

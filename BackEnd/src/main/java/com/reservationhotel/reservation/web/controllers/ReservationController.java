@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 // import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,22 +57,22 @@ public class ReservationController {
         return new ResponseEntity<>(this.reservationService.getReservationByUser(user_id), HttpStatus.OK);
     }
 
-    // @PutMapping()
-    // public String updateReservationById(@RequestBody ReservationDTO request, @RequestParam String hotel_id){
-    //     return "respuesta" + hotel_id;
-    // }
+    @PutMapping("/{hotel_id}/{user_id}")
+    public ResponseEntity<ReservationDTO> updateReservationById(@RequestBody ReservationDTO request, @PathVariable("hotel_id") Long hotel_id, @PathVariable("user_id") Long user_id){
+        return new ResponseEntity<>(this.reservationService.updateReservationById(request, new ReservationID(hotel_id, user_id)), HttpStatus.OK);
+    }
 
-    // @DeleteMapping(path = "/{id}")
-    // public ResponseEntity<String> deleteById(@PathVariable("id") Long id){
-    //     return new ResponseEntity<>(this.reservationService.deleteReservation(id), HttpStatus.OK);
-    //     // boolean ok = this.reservationService.deleteReservation(id);
+    @DeleteMapping(path = "/{hotel_id}/{user_id}")
+    public ResponseEntity<String> deleteById(@PathVariable("hotel_id") Long hotel_id, @PathVariable("user_id") Long user_id){
+        return new ResponseEntity<>(this.reservationService.deleteReservation(new ReservationID(hotel_id, user_id)), HttpStatus.OK);
+        // boolean ok = this.reservationService.deleteReservation(id);
         
-    //     // if(ok){
-    //     //     return "Reservation with id " + id + " deleted succesfully.";
-    //     // }
+        // if(ok){ 
+        //     return "Reservation with id " + id + " deleted succesfully.";
+        // }
 
-    //     // return "Error, We have a problem and we cant delete reservation with id " + id; 
-    // }
+        // return "Error, We have a problem and we cant delete reservation with id " + id; 
+    }
 
     @ExceptionHandler(CustomBadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

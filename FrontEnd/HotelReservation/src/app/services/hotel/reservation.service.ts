@@ -6,10 +6,15 @@ import { Injectable } from '@angular/core';
 })
 export class ReservationService {
   private URL = 'http://localhost:4100/reservation';
+  private URL2 = 'http://localhost:4100/guest';
 
   constructor(private http: HttpClient) {}
 
   createReservation(data: any){
     return this.http.post<any>(`${this.URL}`, data);
+  }
+
+  saveguest(data: any){
+    return this.http.post<any>(`${this.URL2}`, data);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotelService } from '../services/hotel/hotel.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service';
@@ -12,7 +12,7 @@ interface Client {
 }
 
 interface Room {
-  type: string;
+  noRooms: number[];
   clients: Client[];
 }
 
@@ -56,11 +56,13 @@ export class ReservationComponent implements OnInit {
 
   ReservatioForm: FormGroup = this.formBuilder.group({
     init_date: [null, [Validators.required]],
-    end_date: [null, [Validators.required]]
+    end_date: [null, [Validators.required]],
   });
 
   clients: any[] = [];
   id : string | null; 
+  user_document: number; 
+  alldata : any; 
 
   constructor(private formBuilder: FormBuilder, private hotelService: HotelService,private authService: AuthService, private route : ActivatedRoute, private reservatoionService: ReservationService) {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -68,35 +70,68 @@ export class ReservationComponent implements OnInit {
       this.hotel = e; 
       console.log(this.hotel);
     });
+
+    let ls = localStorage.getItem("user");
+    this.user_document = JSON.parse(ls? ls: "").document;
+    
    }
+
+  registerForm = this.formBuilder.group({
+    init_date: ['', Validators.required],
+    end_date: ['', Validators.required],
+  });
 
   ngOnInit(): void {
   }
 
-  onSubmit(): void {
-    if (this.clientForm.valid) {
-      const newClient = this.clientForm.value;
+  onSubmit(formData: any) {
+    console.log(formData);
+
+      const newreservation = formData;
+      let user = localStorage.getItem("user");
+      let documnet = user? JSON.parse(user).document : 0; 
+      let reservationvalues = {
+        hotel_id: this.hotel.hotel_id,
+        user_id: documnet,
+        init_date: newreservation.init_date,
+        end_date: newreservation.end_date,
+        status: "Active"
+      }
       
-      this.authService.getUserByID(newClient.document).subscribe((res) => {
-        newClient.name = res.name;
-        this.clients.push(newClient);
-        this.clientForm.reset();
-      },
-      (err) => {
-        newClient.name = "No registrado";
-        this.clients.push(newClient);
-        this.clientForm.reset();
-      } 
-      );
-    }
+      this.reservatoionService.createReservation(reservationvalues).subscribe((res) => {
+        console.log(res);
+        let guest = {
+          hotel_id: this.hotel.hotel_id,
+          principal_client_id: documnet,
+          document:documnet
+        }
+        this.reservatoionService.saveguest(documnet).subscribe((val) => {
+          console.log(val);
+        });
+
+        for (const property in formData) {
+          const re = /document-*/;
+          let guest = {
+            hotel_id: this.hotel.hotel_id,
+            principal_client_id: documnet,
+            document:formData[property]
+          }
+          if(property.match(re)) {
+            this.reservatoionService.saveguest(guest).subscribe((val) => {
+              console.log(val);
+            });
+          }
+        }
+      });
+   
   }
 
   onDeleteClient(client: any): void {
-    const index = this.clients.indexOf(client);
-    if (index !== -1) {
-      this.clients.splice(index, 1);
-    }
+    const index = this.rooms.indexOf(client);
+    this.rooms.splice(index, 1);
+    console.log(this.rooms, index);
   }
+
   myHolidayFilter: DateFilterFn<Date | null> = (d: Date | null): boolean => {
     if (d === null) {
       return false;
@@ -117,7 +152,7 @@ export class ReservationComponent implements OnInit {
         init_date: newreservation.init_date,
         end_date: newreservation.end_date,
         status: "Active"
-      }
+      } 
       
       console.log(reservationvalues);
       
@@ -128,9 +163,13 @@ export class ReservationComponent implements OnInit {
     }
   }
 
-
-  addRoom(type: string) {
-    this.rooms.push({ type: type, clients: [] });
+  addRoom(max: number) {
+    
+    let noRooms = [];
+    for(let i=0; i<max; i++){
+      noRooms.push(i);
+    }
+    this.rooms.push({ noRooms: noRooms, clients: [] });
   }
 
   removeClient(room: Room, index: number) {

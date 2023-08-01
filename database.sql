@@ -42,13 +42,12 @@ CREATE TABLE reservation (
 );
 
 CREATE TABLE guest ( 
-    guestID bigint NOT NULL,
+    guest_id bigint NOT NULL AUTO_INCREMENT,
     hotel_id bigint NOT NULL,
     principal_client_id bigint NOT NULL,
     document bigint NOT NULL,
-    PRIMARY KEY(guestID),
+    PRIMARY KEY(guest_id),
     FOREIGN KEY (hotel_id) REFERENCES reservation(hotel_id),
     FOREIGN KEY (principal_client_id) REFERENCES reservation(user_id),
-    FOREIGN KEY (document) REFERENCES user(document)
 );
  

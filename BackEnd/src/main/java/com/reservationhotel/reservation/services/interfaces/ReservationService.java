@@ -12,11 +12,11 @@ public interface ReservationService {
 
     public ReservationDTO getReservationById(ReservationID id);
 
-    public ReservationDTO updateReservationById (ReservationDTO request, Long id);
+    public ReservationDTO updateReservationById (ReservationDTO request, ReservationID id);
 
     public ArrayList<ReservationDTO> getReservationByHotel(Long id);
     
     public ArrayList<ReservationDTO> getReservationByUser(Long id);
 
-    public Boolean deleteReservation(Long id);
+    public String deleteReservation(ReservationID id);
 }
