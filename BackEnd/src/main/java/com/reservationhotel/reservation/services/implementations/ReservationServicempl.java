@@ -1,12 +1,16 @@
 package com.reservationhotel.reservation.services.implementations;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.reservationhotel.reservation.models.entities.DisponibilityModel;
 import com.reservationhotel.reservation.models.entities.ReservationID;
 import com.reservationhotel.reservation.models.entities.ReservationModel;
 import com.reservationhotel.reservation.repositories.ReservationRepository;
@@ -27,6 +31,10 @@ public class ReservationServicempl implements ReservationService {
                 .init_date(reservation.getInit_date())
                 .end_date(reservation.getEnd_date())
                 .status(reservation.getStatus())
+                .no_single(reservation.getNo_single())
+                .no_double(reservation.getNo_double())
+                .no_triple(reservation.getNo_triple())
+                .no_quad(reservation.getNo_quad())
                 .build();
 
         return reservationModel;
@@ -39,6 +47,10 @@ public class ReservationServicempl implements ReservationService {
                 .init_date(reservation.getInit_date())
                 .end_date(reservation.getEnd_date())
                 .status(reservation.getStatus())
+                .no_single(reservation.getNo_single())
+                .no_double(reservation.getNo_double())
+                .no_triple(reservation.getNo_triple())
+                .no_quad(reservation.getNo_quad())
                 .build();
 
         return reservationDTO;
@@ -69,6 +81,7 @@ public class ReservationServicempl implements ReservationService {
             ReservationDTO reservationDTO = this.mappingModelToDTO(reservationRepository.save(reservationModel));
             return reservationDTO;
         } catch(Exception err){
+            System.out.println(err);
             throw new CustomBadRequestException("Error al crear la reserva, Intente Luego", HttpStatus.BAD_REQUEST.value());
         }
     }
@@ -126,6 +139,26 @@ public class ReservationServicempl implements ReservationService {
     }
 
     @Override
+    public ArrayList<ReservationDTO> getReservationByGuest(Long id) {
+        try{
+            ArrayList<ReservationModel> query;
+            try{
+                query =  (ArrayList<ReservationModel>)reservationRepository.findByGuest(id);
+            } catch (Exception e){
+                throw new CustomBadRequestException("Reserva con id guest: " + id + " No existe.", HttpStatus.BAD_REQUEST.value());
+            }
+            ArrayList<ReservationDTO> finalReservations = new ArrayList<ReservationDTO>();
+            for (int i = 0; i < query.size(); i++) {
+                finalReservations.add(this.mappingModelToDTO(query.get(i)));
+            }
+            return finalReservations;
+        } catch(Exception err) {
+            System.out.println(err);
+            throw new CustomBadRequestException("No se pudo consultar, intente luego.", HttpStatus.BAD_REQUEST.value());
+        }
+    }
+
+    @Override
     public ReservationDTO updateReservationById (ReservationDTO request, ReservationID id){
         ReservationModel reservation = reservationRepository.findByCoID(id.getHotel_id(), id.getUser_id())
             .orElseThrow(() -> new CustomBadRequestException("Error al editar la reserva con id: " + id + " NO existe", HttpStatus.NOT_FOUND.value()));
@@ -135,6 +168,30 @@ public class ReservationServicempl implements ReservationService {
         
         ReservationDTO reservationDTO = this.mappingModelToDTO(reservationRepository.save(reservation));
         return reservationDTO; 
+    }
+
+    @Override
+    public DisponibilityModel disponibility ( Long hotel_id, String init_date, String end_date){
+        ArrayList<Object[]> result = reservationRepository.disponibility(hotel_id, init_date, end_date);
+        if(result.isEmpty()){
+            throw new CustomBadRequestException("Todo disponible", HttpStatus.NOT_FOUND.value()); 
+        }
+        
+        Object[] row = result.get(0);
+        
+        Long hotelId = (Long) row[0];
+        BigDecimal availableSingle = (BigDecimal) row[1];
+        BigDecimal available_double = (BigDecimal) row[2];
+        BigDecimal available_triple = (BigDecimal) row[3];
+        BigDecimal available_quad = (BigDecimal) row[4];
+        
+        return DisponibilityModel.builder()
+                .hotel_id(hotelId)
+                .available_single(availableSingle.longValue())
+                .available_double(available_double.longValue())
+                .available_triple(available_triple.longValue())
+                .available_quad(available_quad.longValue())
+                .build();
     }
 
     @Override

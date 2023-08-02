@@ -26,4 +26,13 @@ public class ReservationModel {
     private LocalDateTime   end_date; 
     @Column
     private String          status; 
-}
+    @Column
+    private Long no_single; 
+    @Column
+    private Long no_double; 
+    @Column
+    private Long no_triple; 
+    @Column
+    private Long no_quad;
+
+ }

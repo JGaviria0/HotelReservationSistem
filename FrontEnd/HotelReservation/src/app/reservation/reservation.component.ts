@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotelService } from '../services/hotel/hotel.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service';
 import { DateClickArg} from '@fullcalendar/interaction';
 import { DateFilterFn, MatCalendarCellClassFunction, MatDatepicker } from '@angular/material/datepicker';
@@ -24,50 +24,32 @@ interface Room {
 export class ReservationComponent implements OnInit {
   hotel: any;
   picker2: MatDatepicker<any> | undefined
-  rooms: Room[] = [];
+  rooms: Room[] = []; 
+  roomsvalues: number[] = [0,0,0,0];
+  disponibilityCheck : boolean = false; 
 
-  myHolidayDates = [
+  init_date_form: Date = new Date(); 
+  end_date_form: Date = new Date(); 
 
-    new Date("8/1/2023"),
-
-    new Date("12/20/2020"),
-
-    new Date("12/17/2020"),
-
-    new Date("12/25/2020"),
-
-    new Date("12/4/2020"),
-
-    new Date("12/7/2020"),
-
-    new Date("12/12/2020"),
-
-    new Date("12/11/2020"),
-
-    new Date("12/26/2020"),
-
-    new Date("12/25/2020")
-
-];
-
-  clientForm: FormGroup = this.formBuilder.group({
-    document: [0, Validators.required]
-  });
-
-  ReservatioForm: FormGroup = this.formBuilder.group({
-    init_date: [null, [Validators.required]],
-    end_date: [null, [Validators.required]],
-  });
+  myHolidayDates = [ new Date("8/1/2023")];
 
   clients: any[] = [];
   id : string | null; 
   user_document: number; 
   alldata : any; 
 
-  constructor(private formBuilder: FormBuilder, private hotelService: HotelService,private authService: AuthService, private route : ActivatedRoute, private reservatoionService: ReservationService) {
+  constructor(
+    private formBuilder: FormBuilder,
+     private hotelService: HotelService,
+     private authService: AuthService, 
+     private route : ActivatedRoute, 
+     private reservatoionService: ReservationService,
+     private router: Router
+     ) {
     this.id = this.route.snapshot.paramMap.get('id');
-    hotelService.gethotelById(this.id? this.id : "").subscribe((e) => {
+    hotelService.gethotelById(this.id? this.id : "").subscribe((e: any) => {
       this.hotel = e; 
+
       console.log(this.hotel);
     });
 
@@ -90,13 +72,24 @@ export class ReservationComponent implements OnInit {
       const newreservation = formData;
       let user = localStorage.getItem("user");
       let documnet = user? JSON.parse(user).document : 0; 
+      let numberOfRooms = [0,0,0,0];
+
+      this.rooms.map((ele) => {
+        numberOfRooms[ele.noRooms.length-1]++; 
+      });
+
       let reservationvalues = {
         hotel_id: this.hotel.hotel_id,
         user_id: documnet,
         init_date: newreservation.init_date,
         end_date: newreservation.end_date,
-        status: "Active"
+        status: "Active",
+        no_single: numberOfRooms[0],
+        no_double: numberOfRooms[1],
+        no_triple: numberOfRooms[2],
+        no_quad: numberOfRooms[3]
       }
+
       
       this.reservatoionService.createReservation(reservationvalues).subscribe((res) => {
         console.log(res);
@@ -105,7 +98,8 @@ export class ReservationComponent implements OnInit {
           principal_client_id: documnet,
           document:documnet
         }
-        this.reservatoionService.saveguest(documnet).subscribe((val) => {
+        console.log(guest);
+        this.reservatoionService.saveguest(guest).subscribe((val) => {
           console.log(val);
         });
 
@@ -114,7 +108,7 @@ export class ReservationComponent implements OnInit {
           let guest = {
             hotel_id: this.hotel.hotel_id,
             principal_client_id: documnet,
-            document:formData[property]
+            document:formData[property],
           }
           if(property.match(re)) {
             this.reservatoionService.saveguest(guest).subscribe((val) => {
@@ -122,8 +116,8 @@ export class ReservationComponent implements OnInit {
             });
           }
         }
+        this.router.navigate(['/myreservations']); 
       });
-   
   }
 
   onDeleteClient(client: any): void {
@@ -137,34 +131,13 @@ export class ReservationComponent implements OnInit {
       return false;
     }
 
+    const today = new Date();
     const time = d.getTime();
-    return !this.myHolidayDates.find(x => x.getTime() === time);
-  }
-
-  makeReservation(): void {
-    if (this.ReservatioForm.valid) {
-      const newreservation = this.ReservatioForm.value;
-      let user = localStorage.getItem("user");
-      let documnet = user? JSON.parse(user).document : 0; 
-      let reservationvalues = {
-        hotel_id: this.hotel.hotel_id,
-        user_id: documnet,
-        init_date: newreservation.init_date,
-        end_date: newreservation.end_date,
-        status: "Active"
-      } 
-      
-      console.log(reservationvalues);
-      
-      this.reservatoionService.createReservation(reservationvalues).subscribe((res) => {
-        console.log(res);
-      });
-      
-    }
+    return !this.myHolidayDates.find(x => x.getTime() === time) && d >= today;
   }
 
   addRoom(max: number) {
-    
+    this.roomsvalues[max-1]--; 
     let noRooms = [];
     for(let i=0; i<max; i++){
       noRooms.push(i);
@@ -174,5 +147,31 @@ export class ReservationComponent implements OnInit {
 
   removeClient(room: Room, index: number) {
     room.clients.splice(index, 1);
+  }
+
+  checkDisponibility(formData: any){
+    console.log(formData);
+    this.init_date_form =  formData.init_date;
+    this.end_date_form = formData.end_date;
+    this.disponibilityCheck = true; 
+
+    this.rooms = []
+
+    this.reservatoionService.getReservationbyhotel(Number(this.id? this.id : "0"), formData.init_date, formData.end_date).subscribe((res)=> {
+      
+      console.log(res); 
+      this.roomsvalues[0] = this.hotel.noSingle - res.available_single;
+      this.roomsvalues[1] = this.hotel.noDouble - res.available_double;
+      this.roomsvalues[2] = this.hotel.noTriple - res.available_triple;
+      this.roomsvalues[3] = this.hotel.noQuad - res.available_quad;
+      console.log(this.roomsvalues);
+    }, (e) => {
+      console.log("error");
+      this.roomsvalues[0] = this.hotel.noSingle;
+      this.roomsvalues[1] = this.hotel.noDouble;
+      this.roomsvalues[2] = this.hotel.noTriple;
+      this.roomsvalues[3] = this.hotel.noQuad;
+    });
+
   }
 }

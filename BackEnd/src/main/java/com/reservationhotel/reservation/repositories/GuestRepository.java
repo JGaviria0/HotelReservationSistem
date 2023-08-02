@@ -18,4 +18,10 @@ public interface GuestRepository extends JpaRepository<GuestModel, Long> {
 
     @Query(value = "SELECT * FROM guest WHERE hotel_id = ?1 AND principal_client_id = ?2 AND document =?3", nativeQuery = true)
     GuestModel findByhoteluserdocument(Long hotel_id, Long user_id, Long document);
+
+    @Query(value = "SELECT * FROM guest WHERE hotel_id = ?1 AND principal_client_id = ?2", nativeQuery = true)
+    ArrayList<GuestModel> findByUserAndHotel(Long hotel_id, Long user_id);
+
+
+    
 }

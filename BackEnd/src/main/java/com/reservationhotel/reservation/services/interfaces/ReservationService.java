@@ -1,6 +1,8 @@
 package com.reservationhotel.reservation.services.interfaces;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.reservationhotel.reservation.models.entities.DisponibilityModel;
 import com.reservationhotel.reservation.models.entities.ReservationID;
 import com.reservationhotel.reservation.web.dto.ReservationDTO;
 
@@ -19,4 +21,8 @@ public interface ReservationService {
     public ArrayList<ReservationDTO> getReservationByUser(Long id);
 
     public String deleteReservation(ReservationID id);
+
+    public ArrayList<ReservationDTO> getReservationByGuest(Long id);
+
+    public DisponibilityModel disponibility ( Long hotel_id, String init_date, String end_date);
 }

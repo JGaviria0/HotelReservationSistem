@@ -23,7 +23,7 @@ export class LoginComponent {
           this.router.navigate(['/myhotels']); 
         }
         else{
-          this.router.navigate(['/']); 
+          this.router.navigate(['/hotels']); 
         }
       } else {
         this.errorMessage = "Credenciales incorrectas. Inténtalo de nuevo.";

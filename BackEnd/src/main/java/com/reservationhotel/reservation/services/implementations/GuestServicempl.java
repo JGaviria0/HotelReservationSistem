@@ -71,7 +71,20 @@ public class GuestServicempl implements GuestService {
     public ArrayList<GuestDTO> getGuestByhotel(Long id){
         ArrayList<GuestModel> query =  guestRepository.findByHotel(id);
         if(query.isEmpty()){
-            throw new CustomBadRequestException("El hotel" + id + "No tiene reservas o no existe." , HttpStatus.NOT_FOUND.value());
+            throw new CustomBadRequestException("El invitado" + id + "No tiene reservas o no existe." , HttpStatus.NOT_FOUND.value());
+        }
+        ArrayList<GuestDTO> finalUsers = new ArrayList<GuestDTO>(); 
+        for(int i=0; i<query.size(); i++){
+            finalUsers.add(this.mappingModelToDTO(query.get(i)));
+        }
+        return finalUsers; 
+    }
+
+    @Override
+    public ArrayList<GuestDTO> getGuestByuserandhotel(Long hotel_id, Long user_id){
+        ArrayList<GuestModel> query =  guestRepository.findByUserAndHotel(hotel_id, user_id);
+        if(query.isEmpty()){
+            throw new CustomBadRequestException("El invitado" + hotel_id + user_id + "No tiene reservas o no existe." , HttpStatus.NOT_FOUND.value());
         }
         ArrayList<GuestDTO> finalUsers = new ArrayList<GuestDTO>(); 
         for(int i=0; i<query.size(); i++){

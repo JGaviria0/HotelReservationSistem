@@ -25,16 +25,61 @@
               </div>
             </div>
             <div class="container">
-                <div class="row">
+              <form #myForm="ngForm" (ngSubmit)="checkDisponibility(myForm.value)">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker" [matDatepickerFilter]="myHolidayFilter" placeholder="Inicio" name="init_date" ngModel readonly="">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker ></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker2" [matDatepickerFilter]="myHolidayFilter" placeholder="Fin" name="end_date"  ngModel readonly="">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2 ></mat-datepicker>
+                </mat-form-field>
+                <button type="submit" class="btn btn-primary" >check disponibilidad</button>
+              </form>
+
+                <div class="row" *ngIf="disponibilityCheck">
                   <div>
-                    <button (click)="addRoom(1)" class="btn btn-warning">+ Habitacion Individual</button>
-                    <button (click)="addRoom(2)" class="btn btn-warning" >+ Habitacion Doble</button>
-                    <button (click)="addRoom(3)" class="btn btn-warning">+ Habitacion Triple</button>
-                    <button (click)="addRoom(4)" class="btn btn-warning">+ Habitacion Cuadruple</button>
+                    <div class="d-flex align-items-center">
+
+                      <h2>Habitaciones Individuales: {{roomsvalues[0]}}</h2>
+                      <div class="row p-4" *ngIf="roomsvalues[0] > 0; else novalue">
+                        <button (click)="addRoom(1)" class="btn btn-warning">+ Agregar</button>
+                      </div>
+                      <ng-template #novalue>
+                        <button (click)="addRoom(1)" class="btn btn-warning" disabled>+ Habitacion Individual</button>
+                      </ng-template>
+                    </div>
+
+                    <h2>Habitaciones Dobles: {{roomsvalues[1]}}</h2>
+                    <div *ngIf="roomsvalues[1] > 0; else novalue2">
+                      <button (click)="addRoom(2)" class="btn btn-warning" >+ Habitacion Doble</button>
+                    </div>
+                    <ng-template #novalue2>
+                      <button (click)="addRoom(2)" class="btn btn-warning" disabled>+ Habitacion Doble</button>
+                    </ng-template>
+                    
+                    <h2>Habitaciones Triples: {{roomsvalues[2]}}</h2>
+                    <div *ngIf="roomsvalues[2] > 0; else novalue3">
+                      <button (click)="addRoom(3)" class="btn btn-warning">+ Habitacion Triple</button>
+                    </div>
+                    <ng-template #novalue3>
+                      <button (click)="addRoom(3)" class="btn btn-warning" disabled>+ Habitacion Triple</button>
+                    </ng-template>
+                    
+                    <h2>Habitaciones Cuadruple: {{roomsvalues[3]}}</h2>
+                    <div *ngIf="roomsvalues[3] > 0; else novalue4">
+                      <button (click)="addRoom(4)" class="btn btn-warning">+ Habitacion Cuadruple</button>
+                    </div>
+                    <ng-template #novalue4>
+                      <button (click)="addRoom(4)" class="btn btn-warning" disabled>+ Habitacion Cuadruple</button>
+                    </ng-template>
                   </div>
                   
                 <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm.value)">
-                  <!-- <div *ngFor="let room of rooms">
+                  <div *ngFor="let room of rooms">
                     <h2>Room {{rooms.indexOf(room)+1}}</h2>
                     <div *ngFor="let n of room.noRooms">
                       <div *ngIf="n == 0 && rooms.indexOf(room) == 0; else nofirst">
@@ -51,24 +96,12 @@
                       </ng-template>
                     </div>
                       <button (click)="onDeleteClient(room)" class="btn btn-danger">Eliminar Habitacion</button>
-                    </div> -->
+                    </div>
 
                   
-                    <mat-form-field>
-                      <input matInput [matDatepicker]="picker" [matDatepickerFilter]="myHolidayFilter" placeholder="Inicio" name="init_date" ngModel readonly="">
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker ></mat-datepicker>
-                    </mat-form-field>
+                    
 
-                    <mat-form-field>
-                      <input matInput [matDatepicker]="picker2" [matDatepickerFilter]="myHolidayFilter" placeholder="Fin" name="end_date"  ngModel readonly="">
-                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                      <mat-datepicker #picker2 ></mat-datepicker>
-                    </mat-form-field>
-
-                    <button type="" class="btn btn-primary" >check disponibilidad</button>
-
-                    <button type="submit" class="btn btn-primary">Finalizar</button>
+                    <button type="submit" class="btn btn-primary p-4">Finalizar</button>
                   </form>
                 </div>
               </div>

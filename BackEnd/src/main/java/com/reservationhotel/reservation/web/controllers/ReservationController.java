@@ -1,5 +1,6 @@
 package com.reservationhotel.reservation.web.controllers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 // import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 // import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.reservationhotel.reservation.models.entities.DisponibilityModel;
 import com.reservationhotel.reservation.models.entities.ReservationID;
 import com.reservationhotel.reservation.services.implementations.ReservationServicempl;
 import com.reservationhotel.reservation.web.dto.ReservationDTO;
@@ -52,9 +55,22 @@ public class ReservationController {
         return new ResponseEntity<>(this.reservationService.getReservationByHotel(hotel_id), HttpStatus.OK);
     }
 
+    @GetMapping("/getByGuest/{guest}")
+    public ResponseEntity<ArrayList<ReservationDTO>> getReservationByGuest(@PathVariable("guest") Long guest){
+        return new ResponseEntity<>(this.reservationService.getReservationByGuest(guest), HttpStatus.OK);
+    }
+
     @GetMapping("/getByUser/{user_id}")
     public ResponseEntity<ArrayList<ReservationDTO>> getReservationByUser(@PathVariable("user_id") Long user_id){
         return new ResponseEntity<>(this.reservationService.getReservationByUser(user_id), HttpStatus.OK);
+    }
+
+    @GetMapping("/disponibility/{hotel_id}")
+    public ResponseEntity<DisponibilityModel> getDisponibility(@PathVariable("hotel_id") Long hotel_id,@RequestParam("init_date") String init_date, @RequestParam("end_date") String end_date){
+        System.out.println(hotel_id);
+        System.out.println(init_date);
+        System.out.println(end_date);
+        return new ResponseEntity<>(this.reservationService.disponibility(hotel_id, init_date, end_date), HttpStatus.OK);
     }
 
     @PutMapping("/{hotel_id}/{user_id}")
@@ -65,13 +81,6 @@ public class ReservationController {
     @DeleteMapping(path = "/{hotel_id}/{user_id}")
     public ResponseEntity<String> deleteById(@PathVariable("hotel_id") Long hotel_id, @PathVariable("user_id") Long user_id){
         return new ResponseEntity<>(this.reservationService.deleteReservation(new ReservationID(hotel_id, user_id)), HttpStatus.OK);
-        // boolean ok = this.reservationService.deleteReservation(id);
-        
-        // if(ok){ 
-        //     return "Reservation with id " + id + " deleted succesfully.";
-        // }
-
-        // return "Error, We have a problem and we cant delete reservation with id " + id; 
     }
 
     @ExceptionHandler(CustomBadRequestException.class)

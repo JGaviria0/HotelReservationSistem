@@ -21,6 +21,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MyreservationsComponent } from './myreservations/myreservations.component';
 
 const appRoutes: Routes= [
   {path: '', component: HomeComponent},
@@ -31,6 +32,7 @@ const appRoutes: Routes= [
   {path: 'createhotel', component: CreateHotelComponent},
   {path: 'edithotel/:id', component: EditHotelComponent},
   {path: 'reservation/:id', component: ReservationComponent},
+  {path: 'myreservations', component: MyreservationsComponent},
 ]
 
 @NgModule({
@@ -44,7 +46,8 @@ const appRoutes: Routes= [
     MyhotelsComponent,
     CreateHotelComponent,
     EditHotelComponent,
-    ReservationComponent
+    ReservationComponent,
+    MyreservationsComponent
   ],
   imports: [
     BrowserModule,

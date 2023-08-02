@@ -1,0 +1,18 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+    <h2>Mis Reservas</h2>
+    <div class="row">
+      <div *ngFor="let reserva of myreservations" class="col-md-4">
+        <div class="card mb-4">
+          <img [src]="reserva.hotel.imagen" class="card-img-top" alt="Hotel Image">
+          <div class="card-body">
+            <h5 class="card-title">{{ reserva.hotel.name }}</h5>
+            <p class="card-text">{{ reserva.hotel.location }}</p>
+            <button class="btn btn-warning btn-lg m-1" >Editar</button>
+            <!-- <button class="btn btn-warning btn-lg m-1" (click)="redirectedit(hotel.hotel_id)" >Edit</button> -->
+            <button class="btn btn-danger btn-lg m-1" (click)="deletereservation(reserva.hotel_id, reserva.user_id)" >Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -38,6 +38,11 @@ public class GuestCotroller {
         return new ResponseEntity<>(this.guestService.getGuestByuser(id), HttpStatus.OK);
     }
 
+    @GetMapping("/{hotel_id}/{user_id}")
+    public ResponseEntity<ArrayList<GuestDTO>> getguestbyhotelanduser(@PathVariable("hotel_id") Long hotel_id, @PathVariable("user_id") Long user_id){
+        return new ResponseEntity<>(this.guestService.getGuestByuserandhotel(hotel_id, user_id), HttpStatus.OK);
+    }
+
     @DeleteMapping(path = "/{hotel_id}/{user_id}/{document}")
     public ResponseEntity<String> deleteById(@PathVariable("hotel_id") Long hotel_id, @PathVariable("user_id") Long user_id, @PathVariable("document") Long document){
         return new ResponseEntity<>(this.guestService.deleteGuest(hotel_id, user_id, document), HttpStatus.OK);

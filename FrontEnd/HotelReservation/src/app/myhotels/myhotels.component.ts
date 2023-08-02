@@ -29,6 +29,5 @@ export class MyhotelsComponent {
       window.location.reload();
     });
     window.location.reload();
-    
   }
 }

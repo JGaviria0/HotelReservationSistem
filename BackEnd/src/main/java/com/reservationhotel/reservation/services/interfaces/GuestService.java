@@ -12,4 +12,6 @@ public interface GuestService {
     public ArrayList<GuestDTO> getGuestByhotel(Long id);
 
     public String deleteGuest(Long hote_id, Long user_id, Long document);
+
+    public ArrayList<GuestDTO> getGuestByuserandhotel(Long hotel_id, Long user_id);
 }

@@ -19,4 +19,8 @@ public class ReservationDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime end_date; 
     private String status; 
+    private Long no_single; 
+    private Long no_double; 
+    private Long no_triple; 
+    private Long no_quad;
 }
