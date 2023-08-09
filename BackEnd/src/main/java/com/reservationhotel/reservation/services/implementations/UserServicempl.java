@@ -1,6 +1,7 @@
 package com.reservationhotel.reservation.services.implementations;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,21 +62,22 @@ public class UserServicempl implements UserService {
 
     @Override
     public UserDTO saveUser(UserDTO user){
-        try {
-            userRepository.findById(user.getDocument());            
-        } catch(Exception e){
-            System.out.println(e);
-            UserModel userModel = this.mappingDTOToModel(user);
-            try{
-                UserModel newuser = userRepository.save(userModel);
-                UserDTO userDTO = this.mappingModelToDTO(newuser);
-                return userDTO; 
-            } catch(Exception ee){
-                throw new CustomBadRequestException("Error al guardar el nuevo usuario, Intente Luego", HttpStatus.BAD_REQUEST.value());
-            }
+        
+        Optional<UserModel> ifuser = userRepository.findById(user.getDocument());      
+
+        if(!ifuser.isEmpty()){
+            throw new CustomBadRequestException("El usuario ya existe.", HttpStatus.NOT_ACCEPTABLE.value());
+        }
+        
+        UserModel userModel = this.mappingDTOToModel(user);
+        try{
+            UserModel newuser = userRepository.save(userModel);
+            UserDTO userDTO = this.mappingModelToDTO(newuser);
+            return userDTO; 
+        } catch(Exception ee){
+            throw new CustomBadRequestException("Error al guardar el nuevo usuario, Intente Luego", HttpStatus.BAD_REQUEST.value());
         }
 
-        throw new CustomBadRequestException("El usuario ya existe.", HttpStatus.NOT_ACCEPTABLE.value());
     }
 
     @Override

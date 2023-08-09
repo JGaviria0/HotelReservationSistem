@@ -14,6 +14,13 @@ export class EditHotelComponent {
   formSubmitted: boolean = false;
 
   constructor(private route: ActivatedRoute, private hotelService: HotelService, private router: Router){
+    let user = localStorage.getItem('user');
+    let jsonuser = JSON.parse(user? user: "{}");
+
+    if(jsonuser.userType != "owner"){
+      this.router.navigate([`/login`]);
+    }
+    
     this.id = this.route.snapshot.paramMap.get('id');
     this.hotelService.gethotelById(this.id? this.id: "").subscribe((res) => {
       this.hotel = res; 

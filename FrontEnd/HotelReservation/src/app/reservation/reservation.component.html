@@ -37,7 +37,11 @@
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                   <mat-datepicker #picker2 ></mat-datepicker>
                 </mat-form-field>
-                <button type="submit" class="btn btn-primary" >check disponibilidad</button>
+                
+
+                  <button type="submit" class="btn btn-primary" >check disponibilidad</button>
+                
+               
               </form>
 
                 <div class="row" *ngIf="disponibilityCheck">
@@ -49,33 +53,40 @@
                         <button (click)="addRoom(1)" class="btn btn-warning">+ Agregar</button>
                       </div>
                       <ng-template #novalue>
-                        <button (click)="addRoom(1)" class="btn btn-warning" disabled>+ Habitacion Individual</button>
+                        <button (click)="addRoom(1)" class="btn btn-warning" disabled>+ Agregar</button>
                       </ng-template>
                     </div>
 
-                    <h2>Habitaciones Dobles: {{roomsvalues[1]}}</h2>
-                    <div *ngIf="roomsvalues[1] > 0; else novalue2">
-                      <button (click)="addRoom(2)" class="btn btn-warning" >+ Habitacion Doble</button>
+                    <div class="d-flex align-items-center">
+                      <h2>Habitaciones Dobles: {{roomsvalues[1]}}</h2>
+                      <div class="row p-4" *ngIf="roomsvalues[1] > 0; else novalue2">
+                        <button (click)="addRoom(2)" class="btn btn-warning" >+ Agregar</button>
+                      </div>
+                      <ng-template #novalue2>
+                        <button (click)="addRoom(2)" class="btn btn-warning" disabled>+ Agregar</button>
+                      </ng-template>
                     </div>
-                    <ng-template #novalue2>
-                      <button (click)="addRoom(2)" class="btn btn-warning" disabled>+ Habitacion Doble</button>
-                    </ng-template>
                     
-                    <h2>Habitaciones Triples: {{roomsvalues[2]}}</h2>
-                    <div *ngIf="roomsvalues[2] > 0; else novalue3">
-                      <button (click)="addRoom(3)" class="btn btn-warning">+ Habitacion Triple</button>
+                    <div class="d-flex align-items-center">
+                      <h2>Habitaciones Triples: {{roomsvalues[2]}}</h2>
+                      <div class="row p-4" *ngIf="roomsvalues[2] > 0; else novalue3">
+                        <button (click)="addRoom(3)" class="btn btn-warning">+ Agregar</button>
+                      </div>
+                      <ng-template #novalue3>
+                        <button (click)="addRoom(3)" class="btn btn-warning" disabled>+ Agregar</button>
+                      </ng-template>
                     </div>
-                    <ng-template #novalue3>
-                      <button (click)="addRoom(3)" class="btn btn-warning" disabled>+ Habitacion Triple</button>
-                    </ng-template>
+
+                    <div class="d-flex align-items-center">
+                      <h2>Habitaciones Cuadruple: {{roomsvalues[3]}}</h2>
+                      <div class="row p-4" *ngIf="roomsvalues[3] > 0; else novalue4">
+                        <button (click)="addRoom(4)" class="btn btn-warning">+ Agregar</button>
+                      </div>
+                      <ng-template #novalue4>
+                        <button (click)="addRoom(4)" class="btn btn-warning" disabled>+ Agregar</button>
+                      </ng-template>
+                    </div>
                     
-                    <h2>Habitaciones Cuadruple: {{roomsvalues[3]}}</h2>
-                    <div *ngIf="roomsvalues[3] > 0; else novalue4">
-                      <button (click)="addRoom(4)" class="btn btn-warning">+ Habitacion Cuadruple</button>
-                    </div>
-                    <ng-template #novalue4>
-                      <button (click)="addRoom(4)" class="btn btn-warning" disabled>+ Habitacion Cuadruple</button>
-                    </ng-template>
                   </div>
                   
                 <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm.value)">
@@ -95,13 +106,14 @@
                       </div>
                       </ng-template>
                     </div>
-                      <button (click)="onDeleteClient(room)" class="btn btn-danger">Eliminar Habitacion</button>
+                      <button (click)="onDeleteClient(room)" class="btn btn-danger m-4">Eliminar Habitacion</button>
                     </div>
 
                   
                     
-
-                    <button type="submit" class="btn btn-primary p-4">Finalizar</button>
+                    <div class="row">
+                      <button type="submit" class="btn btn-primary mt-4">Finalizar</button>
+                    </div>
                   </form>
                 </div>
               </div>

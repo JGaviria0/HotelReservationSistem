@@ -12,7 +12,12 @@ export class CreateHotelComponent {
   newHotel: any = {};
   formSubmitted: boolean = false;
   constructor(private hotelService: HotelService, private router: Router) {
+    let user = localStorage.getItem('user');
+    let jsonuser = JSON.parse(user? user: "{}");
 
+    if(jsonuser.userType != "owner"){
+      this.router.navigate([`/login`]);
+    }
   }
 
   onSubmit(): void {

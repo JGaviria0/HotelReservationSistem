@@ -1,11 +1,9 @@
 package com.reservationhotel.reservation.services.implementations;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -73,7 +71,7 @@ public class ReservationServicempl implements ReservationService {
 
         if(!reservationRepository.findByCoID(reservation.getHotel_id(), reservation.getUser_id()).isEmpty()){
             System.out.println("ya existe");
-            throw new CustomBadRequestException("Ya existe la reserva", HttpStatus.NOT_ACCEPTABLE.value());
+            throw new CustomBadRequestException("Ya existe la reserva en este hotel, solo se puede hacer una a la vez.", HttpStatus.NOT_ACCEPTABLE.value());
         }
 
         ReservationModel reservationModel = this.mappingDTOToModel(reservation);
@@ -162,9 +160,10 @@ public class ReservationServicempl implements ReservationService {
     public ReservationDTO updateReservationById (ReservationDTO request, ReservationID id){
         ReservationModel reservation = reservationRepository.findByCoID(id.getHotel_id(), id.getUser_id())
             .orElseThrow(() -> new CustomBadRequestException("Error al editar la reserva con id: " + id + " NO existe", HttpStatus.NOT_FOUND.value()));
-        reservation.setInit_date(request.getInit_date());
-        reservation.setEnd_date(request.getEnd_date());
-        reservation.setStatus(request.getStatus());
+        reservation.setNo_single(request.getNo_single());
+        reservation.setNo_double(request.getNo_double());
+        reservation.setNo_triple(request.getNo_triple());
+        reservation.setNo_quad(request.getNo_quad());
         
         ReservationDTO reservationDTO = this.mappingModelToDTO(reservationRepository.save(reservation));
         return reservationDTO; 

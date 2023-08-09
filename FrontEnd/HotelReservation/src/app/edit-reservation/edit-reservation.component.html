@@ -1,0 +1,131 @@
+<app-navbar></app-navbar>
+<section class="h-100 gradient-custom-2">
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-lg-9 col-xl-7">
+        <div class="card">
+          <img  src="{{hotel.imagen}}" class="rounded-top text-white d-flex flex-row" style="background-color: #000; max-height:400px;">
+          <div class="p-4 text-black" style="background-color: #f8f9fa;">
+            
+          </div>
+          <div class="card-body p-4 text-black">
+            <div class="mb-5">
+              <p class="lead fw-normal mb-1">{{hotel.name}}</p>
+              <div class="p-4" style="background-color: #f8f9fa;">
+                <p class="font-italic mb-1">Ubicacion: {{hotel.location}} </p>
+                <p class="font-italic mb-1">Email: {{hotel.email}} </p>
+                <p class="font-italic mb-1">Telefono: {{hotel.phone}}</p>
+                <p class="font-italic mb-1">Capacidad: {{hotel.capacity}}</p>
+                <p class="font-italic mb-1">Habitaciones: {{hotel.noRooms}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid">
+            
+              <mat-form-field class="w-50">
+                <label for="init_date" class="mb-2">Fecha Inicio</label>
+                <input matInput [matDatepicker]="picker" [matDatepickerFilter]="myHolidayFilter" placeholder="Inicio" name="init_date" [ngModel]="initDate" ngModel readonly="">
+                <mat-datepicker #picker ></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field class="w-50">
+                <label for="init_date" class="mb-2">Fecha Fin</label>
+                <input matInput [matDatepicker]="picker2" [matDatepickerFilter]="myHolidayFilter" placeholder="Fin" name="end_date"  [ngModel]="endDate" ngModel readonly="">
+                <mat-datepicker #picker2 ></mat-datepicker>
+              </mat-form-field>
+
+              <div class="row" *ngIf="disponibilityCheck">
+                <div>
+                  <div class="d-flex align-items-center">
+
+                    <h2>Habitaciones Individuales: {{roomsvalues[0]}}</h2>
+                    <div class="row p-4" *ngIf="roomsvalues[0] > 0; else novalue">
+                      <button (click)="addRoom2(1)" class="btn btn-warning">+ Agregar</button>
+                    </div>
+                    <ng-template #novalue>
+                      <button (click)="addRoom2(1)" class="btn btn-warning" disabled>+ Agregar</button>
+                    </ng-template>
+                  </div>
+
+                  <div class="d-flex align-items-center">
+                    <h2>Habitaciones Dobles: {{roomsvalues[1]}}</h2>
+                    <div class="row p-4" *ngIf="roomsvalues[1] > 0; else novalue2">
+                      <button (click)="addRoom2(2)" class="btn btn-warning" >+ Agregar</button>
+                    </div>
+                    <ng-template #novalue2>
+                      <button (click)="addRoom2(2)" class="btn btn-warning" disabled>+ Agregar</button>
+                    </ng-template>
+                  </div>
+                  
+                  <div class="d-flex align-items-center">
+                    <h2>Habitaciones Triples: {{roomsvalues[2]}}</h2>
+                    <div class="row p-4" *ngIf="roomsvalues[2] > 0; else novalue3">
+                      <button (click)="addRoom2(3)" class="btn btn-warning">+ Agregar</button>
+                    </div>
+                    <ng-template #novalue3>
+                      <button (click)="addRoom2(3)" class="btn btn-warning" disabled>+ Agregar</button>
+                    </ng-template>
+                  </div>
+
+                  <div class="d-flex align-items-center">
+                    <h2>Habitaciones Cuadruple: {{roomsvalues[3]}}</h2>
+                    <div class="row p-4" *ngIf="roomsvalues[3] > 0; else novalue4">
+                      <button (click)="addRoom2(4)" class="btn btn-warning">+ Agregar</button>
+                    </div>
+                    <ng-template #novalue4>
+                      <button (click)="addRoom2(4)" class="btn btn-warning" disabled>+ Agregar</button>
+                    </ng-template>
+                  </div>
+                  
+                </div>
+                
+              <form #myForm2="ngForm" (ngSubmit)="onSubmit(myForm2.value)">
+                <div *ngFor="let room of rooms" class="mb-4">
+                  <h2>Room {{rooms.indexOf(room)+1}}</h2>
+                  <div *ngFor="let n of room.noRooms" class="mb-3">
+                    <div *ngIf="n < 100; else nofirst">
+                      <div class="form-group mt-3"> 
+                        <label for="name">Documento Block:</label>
+                        <input type="number" id="document" class="form-control" name="document-{{n}}" pattern="[0-9]{5,}" ngModel required>
+                      </div>
+                    </div>
+                    <ng-template #nofirst>
+                      <div class="form-group mt-3">
+                        <label for="name">Documento:</label>
+                        <input [ngModel]="n" type="number" id="document" class="form-control" name="document-{{n}}" pattern="[0-9]{5,}" required>
+                      </div>
+                    </ng-template>
+                  </div>
+                  <button (click)="onDeleteClient(room)" class="btn btn-danger mt-4">Eliminar Habitacion</button>
+                </div>
+                
+
+                
+                  
+                <div class="row">
+                  <button type="submit" class="btn btn-primary ">Finalizar</button>
+                </div>
+              </form>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+</section>  
+
+
+  <!-- <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm.value)">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" class="form-control" name="name[2]" ngModel required>
+    </div>
+  
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" class="form-control" name="email" ngModel required email>
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form> -->
+  

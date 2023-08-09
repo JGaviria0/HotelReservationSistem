@@ -1,2 +1,101 @@
 <app-navbar></app-navbar>
-<p>home works!</p>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Screen Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            max-width: 1600px;
+            width: 100%;
+            height: 800px; /* Set the desired height */
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .text-side {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .image-side {
+            flex: 1;
+            background-image: url('https://images7.alphacoders.com/362/362619.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-weight: bold;
+        }
+        .text-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1, p {
+            margin: 0;
+        }
+        .blue-button {
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s, color 0.3s;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .blue-button:hover {
+            background-color: #0055a5;
+        }
+        .black-button {
+            background-color: black;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s, color 0.3s;
+            cursor: pointer;
+        }
+        .black-button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-side">
+            <div class="text-content">
+                <h1>Bienvenido a nuestro sitio.</h1>
+                <p style="margin-bottom: 10px;">Reserva con nosotros y verás lo fácil que es planear tus vacaciones.</p>
+                <a href="/login" class="blue-button">Reservar ahora</a>
+            </div>
+        </div>
+        <div class="image-side">
+            <a href="/register" class="black-button">Registrate</a>
+        </div>
+    </div>
+</body>
+</html>

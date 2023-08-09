@@ -22,6 +22,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MyreservationsComponent } from './myreservations/myreservations.component';
+import { EditReservationComponent } from './edit-reservation/edit-reservation.component';
+import { ToastrModule } from 'ngx-toastr';
+import { InfoHotelComponent } from './info-hotel/info-hotel.component';
+import { InfoReservationComponent } from './info-reservation/info-reservation.component';
 
 const appRoutes: Routes= [
   {path: '', component: HomeComponent},
@@ -33,6 +37,9 @@ const appRoutes: Routes= [
   {path: 'edithotel/:id', component: EditHotelComponent},
   {path: 'reservation/:id', component: ReservationComponent},
   {path: 'myreservations', component: MyreservationsComponent},
+  {path: 'infohotel/:id', component: InfoHotelComponent},
+  {path: 'inforeservation/:hotel_id/:user_id', component: InfoReservationComponent},
+  {path: 'editreservation/:hotel_id', component: EditReservationComponent},
 ]
 
 @NgModule({
@@ -47,7 +54,10 @@ const appRoutes: Routes= [
     CreateHotelComponent,
     EditHotelComponent,
     ReservationComponent,
-    MyreservationsComponent
+    MyreservationsComponent,
+    EditReservationComponent,
+    InfoHotelComponent,
+    InfoReservationComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +71,16 @@ const appRoutes: Routes= [
     MatFormFieldModule,
     MatInputModule,
     RouterModule.forRoot(appRoutes),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      progressBar: true,
+      progressAnimation: 'increasing',
+      closeButton: true,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      newestOnTop: true
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

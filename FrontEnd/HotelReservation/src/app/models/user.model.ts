@@ -1,5 +1,5 @@
 export class UserModel {
-    document: number;
+    document: string;
     name: string;
     phone: string; 
     documentType: string; 
@@ -7,7 +7,7 @@ export class UserModel {
     password: string;
 
     constructor() {
-        this.document = 0;
+        this.document = '';
         this.documentType = '';
         this.name = '';
         this.userType = '';

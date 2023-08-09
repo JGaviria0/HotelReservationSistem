@@ -1,0 +1,34 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+  <h1>Reservas</h1>
+  <div class="row">
+    <div *ngFor="let reservation of reservations" class="col-md-4">
+      <div class="card mb-4">
+        <!-- <img [src]="reservation.imagen" class="card-img-top" alt="Hotel Image"> -->
+        <div class="card-body">
+          <h1 class="h1" class="card-title">{{ reservation.userName }}</h1>
+          <p class="card-text">fecha de inicio: {{ reservation.init_date }}</p>
+          <p class="card-text">fecha de fin: {{ reservation.end_date }}</p>
+
+          <h3>Habitaciones</h3>
+          <div class="row">
+            <div class="col-4">Individual</div>
+            <div class="col-1">{{reservation.no_single}}</div>
+            <div class="col-4">Doble:</div>
+            <div class="col-1">{{reservation.no_double}}</div>
+          </div>
+          
+          <div class="row">
+            <div class="col-4">Triple:</div>
+            <div class="col-1">{{reservation.no_triple}}</div>
+            <div class="col-4">Cuadruple:</div>
+            <div class="col-1">{{reservation.no_quad}}</div>
+          </div>
+         
+          <button class="btn btn-primary btn-lg mt-4 "  (click)="redirectinfo(reservation.hotel_id, reservation.user_id)">Info</button>
+          <button class="btn btn-danger btn-lg mt-4 ms-2" (click)="deletereservation(reservation.hotel_id, reservation.user_id)" >Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

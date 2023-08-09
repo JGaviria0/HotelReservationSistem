@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ReservationService } from '../services/hotel/reservation.service';
 import { HotelService } from '../services/hotel/hotel.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-myreservations',
@@ -11,11 +12,20 @@ export class MyreservationsComponent {
 
   myreservations: any; 
 
-  constructor(private reservationService : ReservationService, private hotelService: HotelService){
+  constructor(
+    private reservationService : ReservationService,
+    private hotelService: HotelService,
+    private router : Router, 
+    ){
     let id = localStorage.getItem('user')
     let document = JSON.parse(id? id : " ").document; 
+    let jsonuser = JSON.parse(id? id: "{}");
+
+    if(jsonuser.userType != "Client"){
+      this.router.navigate([`/login`]);
+    }
     this.reservationService.getGuestReservations(document).subscribe((res) => {
-      console.log(res);
+      console.log(res.init_date);
       res.map((hotel: any) => {
         console.log("hotel id " ,hotel.hotel_id);
         this.myreservations = res; 
@@ -27,7 +37,7 @@ export class MyreservationsComponent {
     });
   }
 
-  async deletereservation(hotel_id: number, user_id: number ){
+  async deletereservation(hotel_id: string, user_id: string ){
 
     let guestReservations = await this.reservationService.getGuestHotelandUser(hotel_id, user_id).toPromise();
     for (const res of guestReservations) {
@@ -41,9 +51,17 @@ export class MyreservationsComponent {
     }
     
     try{
-      await this.reservationService.deleteReservation(hotel_id, user_id).toPromise();
+      let value = await this.reservationService.deleteReservation(hotel_id, user_id).toPromise();
+      console.log(value);
     } catch(e){
+      console.log(e);
       window.location.reload();
     }
   }
+
+
+  edit(hotel_id: string ){
+    this.router.navigate([`/editreservation/${hotel_id}`]);
+  }
+
 }

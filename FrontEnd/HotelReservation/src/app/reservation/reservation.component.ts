@@ -6,6 +6,8 @@ import { AuthService } from '../services/auth/auth.service';
 import { DateClickArg} from '@fullcalendar/interaction';
 import { DateFilterFn, MatCalendarCellClassFunction, MatDatepicker } from '@angular/material/datepicker';
 import { ReservationService } from '../services/hotel/reservation.service';
+import { ToastrService } from 'ngx-toastr';
+
 
 interface Client {
   document: string;
@@ -44,7 +46,8 @@ export class ReservationComponent implements OnInit {
      private authService: AuthService, 
      private route : ActivatedRoute, 
      private reservatoionService: ReservationService,
-     private router: Router
+     private router: Router,
+     private toastr: ToastrService
      ) {
     this.id = this.route.snapshot.paramMap.get('id');
     hotelService.gethotelById(this.id? this.id : "").subscribe((e: any) => {
@@ -67,8 +70,7 @@ export class ReservationComponent implements OnInit {
   }
 
   onSubmit(formData: any) {
-    console.log(formData);
-
+      console.log("form data reserva: ",formData);
       const newreservation = formData;
       let user = localStorage.getItem("user");
       let documnet = user? JSON.parse(user).document : 0; 
@@ -78,29 +80,43 @@ export class ReservationComponent implements OnInit {
         numberOfRooms[ele.noRooms.length-1]++; 
       });
 
+      if(numberOfRooms[0] == 0 && numberOfRooms[1] == 0 &&numberOfRooms[2] == 0 &&numberOfRooms[3] == 0){
+        this.norifyError("Debe escoger al menos una habitacion", "Error");
+        return; 
+      }
+
+      for (const property in formData){
+        const re = /document-*/;
+        if(property.match(re) &&  formData[property] <= 10000) {
+          this.norifyError("Los documentos deben ser mayores a 5 digitos", "Error");
+          return;
+        }
+      }
+
       let reservationvalues = {
         hotel_id: this.hotel.hotel_id,
         user_id: documnet,
-        init_date: newreservation.init_date,
-        end_date: newreservation.end_date,
+        init_date: this.init_date_form,
+        end_date: this.end_date_form,
         status: "Active",
         no_single: numberOfRooms[0],
         no_double: numberOfRooms[1],
         no_triple: numberOfRooms[2],
         no_quad: numberOfRooms[3]
       }
-
       
       this.reservatoionService.createReservation(reservationvalues).subscribe((res) => {
-        console.log(res);
         let guest = {
           hotel_id: this.hotel.hotel_id,
           principal_client_id: documnet,
           document:documnet
         }
-        console.log(guest);
         this.reservatoionService.saveguest(guest).subscribe((val) => {
           console.log(val);
+          this.mostrarNotificacion("Guardado con exito", guest.document);
+          this.router.navigate(['/myreservations']); 
+        }, (err) =>{
+          this.norifyError(err.error.message, "Error");
         });
 
         for (const property in formData) {
@@ -113,10 +129,16 @@ export class ReservationComponent implements OnInit {
           if(property.match(re)) {
             this.reservatoionService.saveguest(guest).subscribe((val) => {
               console.log(val);
+              this.mostrarNotificacion("Guardado con exito", guest.document);
+            }, (err) =>{
+              this.norifyError(err.error.message, "Error");
             });
           }
         }
-        this.router.navigate(['/myreservations']); 
+        this.mostrarNotificacion("Guardada con exito", "Reserva");
+        
+      }, (err) => {
+        this.norifyError(err.error.message, "Error");
       });
   }
 
@@ -150,10 +172,21 @@ export class ReservationComponent implements OnInit {
   }
 
   checkDisponibility(formData: any){
+    console.log(formData.init_date < formData.end_date)
+    if(formData.init_date == "" || formData.end_date == "" || formData.init_date >= formData.end_date){
+      this.norifyError("Escoge fechas validas", "Check");
+      return; 
+    }
+    this.mostrarNotificacion("Checkeo de fechas completado", "Check");
+    
     console.log(formData);
     this.init_date_form =  formData.init_date;
     this.end_date_form = formData.end_date;
     this.disponibilityCheck = true; 
+
+    console.log(this.end_date_form);
+    
+
 
     this.rooms = []
 
@@ -173,5 +206,25 @@ export class ReservationComponent implements OnInit {
       this.roomsvalues[3] = this.hotel.noQuad;
     });
 
+  }
+
+  mostrarNotificacion(message: string, title: string) {
+    this.toastr.success(message, title, {
+      timeOut: 2000,
+      progressBar: true,
+      progressAnimation: 'increasing',
+      closeButton: true,
+      positionClass: 'toast-top-right'
+    });
+  }
+
+  norifyError(message: string, title: string) {
+    this.toastr.error(message, title, {
+      timeOut: 4000,
+      progressBar: true,
+      progressAnimation: 'increasing',
+      closeButton: true,
+      positionClass: 'toast-top-right'
+    });
   }
 }

@@ -12,6 +12,13 @@ export class HotelsComponent {
   hotels: any;
 
   constructor(private hotelService: HotelService, private router: Router){
+    let user = localStorage.getItem('user');
+    let jsonuser = JSON.parse(user? user: "{}");
+
+    if(jsonuser.userType != "Client"){
+      this.router.navigate([`/login`]);
+    }
+
     this.hotelService.gethotels().subscribe((res) => {
       this.hotels = res; 
       console.log(this.hotels);

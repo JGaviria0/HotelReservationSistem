@@ -12,7 +12,11 @@ export class MyhotelsComponent {
   
   constructor(private hotelService: HotelService, private router: Router){
     let user = localStorage.getItem('user');
-    let jsonuser = JSON.parse(user? user: "{}")
+    let jsonuser = JSON.parse(user? user: "{}");
+
+    if(jsonuser.userType != "owner"){
+      this.router.navigate([`/login`]);
+    }
 
     this.hotelService.gethotelsOwner(jsonuser.document).subscribe((res) => {
       this.hotels = res; 
@@ -22,6 +26,10 @@ export class MyhotelsComponent {
 
   redirectedit(id: string){
     this.router.navigate([`/edithotel/${id}`]);
+  }
+
+  redirectinfo(id: string){
+    this.router.navigate([`/infohotel/${id}`]);
   }
 
   deletehotel(id: string){

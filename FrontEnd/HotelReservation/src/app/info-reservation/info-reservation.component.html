@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-uppercase mb-0">Huespedes</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table no-wrap user-table mb-0">
+                      <thead>
+                        <tr>
+                          <th scope="col" class="border-0 text-uppercase font-medium pl-4">#</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">Documento</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">Nombre</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">info</th>
+                         
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let guest of guests">
+                          <td class="pl-4">{{guest.index}}</td>
+                          <td>
+                              <h5 class="font-medium mb-0">{{guest.document}}</h5>
+                              <span class="text-muted" *ngIf="guest.user">{{guest.user.documentType}}</span>
+                          </td>
+                          <td>
+                              <span class="text-muted" *ngIf="guest.user; else nouser ">{{guest.user.name}}</span><br>
+                              <ng-template #nouser>
+                                <span class="text-muted">Usuario no registrado</span><br>
+                              </ng-template>
+                            </td>
+                          <td>
+                            <span class="text-muted" *ngIf="guest.user">{{guest.user.phone}}</span><br>
+                          </td>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>

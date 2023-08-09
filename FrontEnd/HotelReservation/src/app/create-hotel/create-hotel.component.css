@@ -1,0 +1,29 @@
+
+.container-fluid {
+    background-color: #FFF;
+    padding: 1rem;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  .container-fluid {
+    height: 750px;
+  }
+  
+  .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .col-lg-6 + .col-lg-6 {
+    padding-left: 20px;
+  }
+  
+  select.form-control {
+    font-size: 15px;
+    line-height: 2;
+  }

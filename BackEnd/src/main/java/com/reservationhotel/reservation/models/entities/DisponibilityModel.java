@@ -1,6 +1,5 @@
 package com.reservationhotel.reservation.models.entities;
 
-import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

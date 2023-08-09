@@ -1,58 +1,66 @@
 <app-navbar></app-navbar>
-<div class="container-fluid bg-dark vh-100 d-flex align-items-center justify-content-center">
-  <div class="login-container text-white text-center">
-    <h2 class="mb-4">Register</h2>
-    <form (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="document" class="text-white">Documento</label>
-        <div *ngIf="formSubmitted && user.document == 0" class="text-danger mt-3">
-          Campo Obligatorio
+<div class="container-fluid d-flex align-items-center justify-content-center" style="width: 500px;">
+  <div class="login-container text-dark text-center">
+    <div class="d-flex align-items-center mb-3 pb-1 justify-content-center" style="margin-top: 20px;">
+      <span class="h2 fw-bold mb-0">Registrate Ahora</span>
+    </div>    
+    <form (ngSubmit)="onSubmit()" class="text-center">
+      <div class="row g-0 my-2">
+        <div class="col-lg-6">
+          <div class="form-group my-3">
+              <label for="document" class="text-dark">Documento</label>
+              <div *ngIf="formSubmitted && user.document == ''" class="text-danger mt-3 md">
+                Campo Obligatorio
+              </div>
+              <input type="text" class="form-control form-control-lg" id="document" name="document" [(ngModel)]="user.document" required style="width: 100%;">
+          </div>
+          <div class="form-group my-3">
+            <label for="name" class="text-dark">Name</label>
+            <div *ngIf="formSubmitted && user.name == ''" class="text-danger mt-3">
+              Campo Obligatorio
+            </div>
+            <input type="text" class="form-control form-control-lg" id="name" name="name" [(ngModel)]="user.name" required style="width: 100%;">
+          </div>
         </div>
-        <input type="text" class="form-control" id="document" name="document"   required="">
-      </div>
-      <div class="form-group">
-        <label for="documentType" class="text-white">Tipo de documento</label>
-        <div *ngIf="formSubmitted && user.documentType == ''" class="text-danger mt-3">
-          Campo Obligatorio
+        <div class="col-lg-6">
+          <div class="form-group my-3">
+            <label for="documentType" class="text-dark">Tipo de documento</label>
+            <div *ngIf="formSubmitted && user.documentType == ''" class="text-danger mt-3">
+              Campo Obligatorio
+            </div>
+            <select class="form-control form-control-lg" id="documentType" name="documentType"  [(ngModel)]="user.documentType" required style="width: 100%;">
+              <option value="ID">Cedula</option>
+              <option value="Passport">Tarjeta de identidad</option>
+              <option value="Other">Pasaporte</option>
+            </select>
+          </div>
+          <div class="form-group my-3">
+            <label for="userType" class="text-dark">User Type</label>
+            <div *ngIf="formSubmitted && user.userType == ''" class="text-danger mt-3">
+              Campo Obligatorio
+            </div>
+            <select class="form-control form-control-lg" id="userType" name="userType" [(ngModel)]="user.userType" required style="width: 100%;">
+              <option value="client">Cliente</option>
+              <option value="owner">Propietario</option>
+            </select>
+          </div>
         </div>
-        <select class="form-control" id="documentType" name="documentType"  required>
-          <option value="ID">Cedula</option>
-          <option value="Passport">Tarjeta de identidad</option>
-          <option value="Other">Pasaporte</option>
-        </select>
       </div>
-      <div class="form-group">
-        <label for="name" class="text-white">Name</label>
-        <div *ngIf="formSubmitted && user.name == ''" class="text-danger mt-3">
-          Campo Obligatorio
-        </div>
-        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="user.name" required>
+      <div class="form-group my-3">
+      <label for="phone" class="text-dark">Phone</label>
+            <div *ngIf="formSubmitted && user.phone == ''" class="text-danger mt-3">
+              Campo Obligatorio
+            </div>
+            <input type="text" class="form-control form-control-lg" id="phone" name="phone" [(ngModel)]="user.phone" required style="width: 100%;">
       </div>
-      <div class="form-group">
-        <label for="userType" class="text-white">User Type</label>
-        <div *ngIf="formSubmitted && user.userType == ''" class="text-danger mt-3">
-          Campo Obligatorio
-        </div>
-        <select class="form-control" id="userType" name="userType" [(ngModel)]="user.userType" required>
-          <option value="client">Cliente</option>
-          <option value="owner">Propietario</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="phone" class="text-white">Phone</label>
-        <div *ngIf="formSubmitted && user.phone == ''" class="text-danger mt-3">
-          Campo Obligatorio
-        </div>
-        <input type="text" class="form-control" id="name" name="phone" [(ngModel)]="user.phone" required>
-      </div>
-      <div class="form-group">
-        <label for="password" class="text-white">Password</label>
+      <div class="form-group my-3">
+        <label for="password" class="text-dark">Password</label>
         <div *ngIf="formSubmitted && user.password == ''" class="text-danger mt-3">
           Campo Obligatorio
         </div>
-        <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password" required>
+        <input type="password" class="form-control form-control-lg" id="password" name="password" [(ngModel)]="user.password" required style="width: 100%;">
       </div>
-      <button type="submit" class="btn btn-primary btn-block btn-transparent text-center mt-3">Register</button>
+      <button type="submit" class="btn btn-primary btn-block btn-transparent text-center mt-3">Registrar</button>
     </form>
   </div>
   </div>

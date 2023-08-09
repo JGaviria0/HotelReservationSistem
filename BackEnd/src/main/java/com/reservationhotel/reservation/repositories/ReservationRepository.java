@@ -1,15 +1,12 @@
 package com.reservationhotel.reservation.repositories;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import com.reservationhotel.reservation.models.entities.DisponibilityModel;
 import com.reservationhotel.reservation.models.entities.ReservationModel;
 
 import jakarta.transaction.Transactional;
@@ -54,6 +51,6 @@ public interface ReservationRepository extends JpaRepository<ReservationModel, L
                 " GROUP BY" +
                 "    hotel_id;"  , 
             nativeQuery = true)
-	ArrayList<Object[]>  disponibility(Long hotel_id, String init_date, String end_date);
+	ArrayList<Object[]> disponibility(Long hotel_id, String init_date, String end_date);
 
 }
